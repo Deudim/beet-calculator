@@ -67,38 +67,38 @@ class Ui(QtWidgets.QWidget):
             self.show()
 
 
-def on_spinBox_matrics_count_changed(self):
-    matrics_count = self.spinBox_matrics_count.value()
-    for i in reversed(range(self.gridLayout.count())):
-        widgetToRemove = self.gridLayout.itemAt(i).widget()
-        self.gridLayout.removeWidget(widgetToRemove)
-        widgetToRemove.setParent(None)
+    def on_spinBox_matrics_count_changed(self):
+        matrics_count = self.spinBox_matrics_count.value()
+        for i in reversed(range(self.gridLayout.count())):
+            widgetToRemove = self.gridLayout.itemAt(i).widget()
+            self.gridLayout.removeWidget(widgetToRemove)
+            widgetToRemove.setParent(None)
 
-    for i in range(matrics_count):
-        for j in range(matrics_count):
-            test = QLineEdit(self)
-            test.insert("0")
-            self.gridLayout.addWidget(test, i, j)
+        for i in range(matrics_count):
+            for j in range(matrics_count):
+                test = QLineEdit(self)
+                test.insert("0")
+                self.gridLayout.addWidget(test, i, j)
 
-def on_get_res(self):
-    matrics_count = self.spinBox_matrics_count.value()
-    matrics = []
-    for i in range(matrics_count):
-        matrics.append([])
-        for j in range(matrics_count):
-            matrics[i].append([])
-            text = self.gridLayout.itemAtPosition(i, j).widget().text()
-            texstarr = text.split("/")
-            if len(texstarr) == 2:
-                try:
-                    textnew = float(texstarr[0]) / float(texstarr[1])
-                except:
-                    textnew = 0.0
-            else:
-                try:
-                    textnew = float(texstarr[0])
-                except:
-                    textnew = 0.0
+    def on_get_res(self):
+        matrics_count = self.spinBox_matrics_count.value()
+        matrics = []
+        for i in range(matrics_count):
+            matrics.append([])
+            for j in range(matrics_count):
+                matrics[i].append([])
+                text = self.gridLayout.itemAtPosition(i, j).widget().text()
+                texstarr = text.split("/")
+                if len(texstarr) == 2:
+                    try:
+                        textnew = float(texstarr[0]) / float(texstarr[1])
+                    except:
+                        textnew = 0.0
+                else:
+                    try:
+                        textnew = float(texstarr[0])
+                    except:
+                        textnew = 0.0
 
-        matrics[i][j] = textnew
-    print(matrics)
+            matrics[i][j] = textnew
+        print(matrics)
