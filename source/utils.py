@@ -3,6 +3,8 @@ from matplotlib import pyplot as plt
 from scipy.optimize import linear_sum_assignment
 from munkres import Munkres
 import time
+from PyQt5 import QtWidgets, QtCore, uic
+from PyQt5.QtWidgets import QApplication, QLineEdit, QVBoxLayout, QPushButton
 
 
 def calculate_time(func):
@@ -12,28 +14,30 @@ def calculate_time(func):
         end_time = time.perf_counter()
         print(f"Время выполнения функции '{func.__name__}': {(end_time - start_time) * 1e9} наносекунд")
         return result
+
     return wrapper
 
 
-#@calculate_time
+# @calculate_time
 def hungarian(matrix, target='min'):
     matrix = np.array(matrix)
     kf = 1
     if target == 'max':
         kf = -1
     matrix = kf * matrix
-    row_ind, col_ind = linear_sum_assignment(matrix) #Венгерский метод (https://docs.scipy.org/doc/scipy-1.1.0/reference/generated/scipy.optimize.linear_sum_assignment.html)
+    row_ind, col_ind = linear_sum_assignment(
+        matrix)  # Венгерский метод (https://docs.scipy.org/doc/scipy-1.1.0/reference/generated/scipy.optimize.linear_sum_assignment.html)
     res = matrix[row_ind, col_ind].sum()
     return float(kf * res)
 
 
-#@calculate_time
+# @calculate_time
 def munkres(matrix, target='min'):
     kf = 1
     if target == 'max':
         kf = -1
     matrix = multiply_matrix_(matrix, kf)
-    m = Munkres()  #Метод Мака https://software.clapper.org/munkres/
+    m = Munkres()  # Метод Мака https://software.clapper.org/munkres/
     indexes = m.compute(matrix)
     res = 0
     for row, column in indexes:
@@ -47,3 +51,54 @@ def multiply_matrix_(matrix, a):
         for j in range(len(matrix[i])):
             matrix[i][j] *= a
     return matrix
+
+
+class Ui(QtWidgets.QWidget):
+    def __init__(self):
+        super(Ui, self).__init__()
+        uic.loadUi('../widget.ui', self)
+        self.spinBox_matrics_count.valueChanged.connect(self.on_spinBox_matrics_count_changed)
+        self.get_res.clicked.connect(self.on_get_res)
+        for i in range(2):
+            for j in range(2):
+                test = QLineEdit(self)
+                test.insert("0")
+                self.gridLayout.addWidget(test, i, j)
+            self.show()
+
+
+def on_spinBox_matrics_count_changed(self):
+    matrics_count = self.spinBox_matrics_count.value()
+    for i in reversed(range(self.gridLayout.count())):
+        widgetToRemove = self.gridLayout.itemAt(i).widget()
+        self.gridLayout.removeWidget(widgetToRemove)
+        widgetToRemove.setParent(None)
+
+    for i in range(matrics_count):
+        for j in range(matrics_count):
+            test = QLineEdit(self)
+            test.insert("0")
+            self.gridLayout.addWidget(test, i, j)
+
+def on_get_res(self):
+    matrics_count = self.spinBox_matrics_count.value()
+    matrics = []
+    for i in range(matrics_count):
+        matrics.append([])
+        for j in range(matrics_count):
+            matrics[i].append([])
+            text = self.gridLayout.itemAtPosition(i, j).widget().text()
+            texstarr = text.split("/")
+            if len(texstarr) == 2:
+                try:
+                    textnew = float(texstarr[0]) / float(texstarr[1])
+                except:
+                    textnew = 0.0
+            else:
+                try:
+                    textnew = float(texstarr[0])
+                except:
+                    textnew = 0.0
+
+        matrics[i][j] = textnew
+    print(matrics)
