@@ -89,6 +89,7 @@ class Ui(QtWidgets.QWidget):
                 matrics[i].append([])
                 text = self.gridLayout.itemAtPosition(i, j).widget().text()
                 texstarr = text.split("/")
+                textnew = 0.0
                 if len(texstarr) == 2:
                     try:
                         textnew = float(texstarr[0]) / float(texstarr[1])
@@ -100,5 +101,11 @@ class Ui(QtWidgets.QWidget):
                     except:
                         textnew = 0.0
 
-            matrics[i][j] = textnew
-        print(matrics)
+                matrics[i][j] = textnew
+        #print(matrics)
+        out = ""
+        get_out = "max"
+        if self.rb_min.isChecked():
+            get_out = "min"
+        self.l_res.setText(get_out + ": " + str(hungarian(matrics, get_out)))
+
