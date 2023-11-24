@@ -1,6 +1,5 @@
 import numpy as np
 from matplotlib import pyplot as plt
-from PyQt5 import *
 from scipy.optimize import linear_sum_assignment
 from munkres import Munkres
 import time
