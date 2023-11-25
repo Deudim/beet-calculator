@@ -18,7 +18,7 @@ def calculate_time(func):
     return wrapper
 
 
-@calculate_time
+#@calculate_time
 def hungarian(matrix, target='min'):
     matrix = np.array(matrix)
     kf = 1
@@ -31,7 +31,7 @@ def hungarian(matrix, target='min'):
     return float(kf * res)
 
 
-@calculate_time
+#@calculate_time
 def munkres(matrix, target='min'):
     kf = 1
     if target == 'max':
@@ -45,7 +45,8 @@ def munkres(matrix, target='min'):
         res += value
     return float(kf * res)
 
-@calculate_time
+
+#@calculate_time
 def greedy(matrix, target='min'):
     matrix = np.array(matrix)
     kf = 1
