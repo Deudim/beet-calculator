@@ -3,13 +3,12 @@
 #
 # m = Munkres()
 import numpy as np
-from utils import multiply_matrix_
-import numpy as np
+import utils
 
 
 def assignment_greedy(cost_matrix):
     '''
-    Хорошая жадная ункция но не та что нам нужна, она ищет минимумы, и занимет их
+    Хорошая жадная функция но не та что нам нужна, она ищет минимумы, и занимет их
     '''
     num_workers = cost_matrix.shape[0]
     num_tasks = cost_matrix.shape[1]
@@ -32,7 +31,6 @@ def assignment_greedy(cost_matrix):
 
     return assigned_workers, assigned_tasks
 
-
 # indexes = m.compute(matrix)
 #
 # print_matrix(matrix, msg='Lowest cost through this matrix:')
@@ -44,20 +42,20 @@ def assignment_greedy(cost_matrix):
 # print(f'total cost: {total}')
 
 
-matrix = np.array([
+matrix = [
     [7, 6, 5.1, 4],
     [6, 5.1, 4, 2],
     [5, 4, 2, 1],
     [4, 2, 1, 0.5]
-])
+]
 
 cost_matrix = np.array([
     [9, 2, 7, 8],
     [6, 4, 3, 7],
     [5, 8, 1, 8],
-    [7, 6, 9, 4]
+    [7, 6, 9, 4.]
 ])
-
+cost_matrix = cost_matrix * -1
 # assignments = assign_jobs(matrix)
 # print("Назначения работников на работы:", assignments)
 # total = 0
@@ -65,7 +63,7 @@ cost_matrix = np.array([
 #     total += matrix[i][assignments[i]]
 # print(total)
 
-row_ind, col_ind = assignment_greedy(matrix)
-for r, c in zip(row_ind, col_ind):
-    print(f"Работник {r} назначен на задачу {c} (стоимость: {matrix[r, c]})")
-print(matrix[row_ind, col_ind].sum())
+
+print(f'munkres {utils.munkres(matrix)}')
+print(f'hungarian {utils.hungarian(matrix)}')
+print(f'greedy {utils.greedy(matrix)}')
