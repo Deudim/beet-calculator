@@ -18,7 +18,7 @@ def calculate_time(func):
     return wrapper
 
 
-# @calculate_time
+@calculate_time
 def hungarian(matrix, target='min'):
     matrix = np.array(matrix)
     kf = 1
@@ -31,7 +31,7 @@ def hungarian(matrix, target='min'):
     return float(kf * res)
 
 
-# @calculate_time
+@calculate_time
 def munkres(matrix, target='min'):
     kf = 1
     if target == 'max':
@@ -45,12 +45,52 @@ def munkres(matrix, target='min'):
         res += value
     return float(kf * res)
 
+@calculate_time
+def greedy(matrix, target='min'):
+    matrix = np.array(matrix)
+    kf = 1
+    if target == 'max':
+        kf = -1
+    matrix = kf * matrix
+    row_ind, col_ind = _greedy_assignment(
+        matrix)
+    res = matrix[row_ind, col_ind].sum()
+    return float(kf * res)
+
 
 def multiply_matrix_(matrix, a):
     for i in range(len(matrix)):
         for j in range(len(matrix[i])):
             matrix[i][j] *= a
     return matrix
+
+
+def _greedy_assignment(matrix):
+    """
+    жадная
+    """
+    num_rows, num_cols = matrix.shape
+    if num_rows != num_cols:
+        raise ValueError("num rows must me match num cols")
+    assignments_row = []
+    assignments_col = []
+
+    # Создаем копию матрицы для работы
+    temp_matrix = np.copy(matrix)
+
+    for i in range(num_rows):
+        min_col_index = i
+
+        min_row_index = np.argmin(temp_matrix[:, min_col_index])
+
+        assignments_row.append(min_row_index)
+        assignments_col.append(min_col_index)
+
+        # Для исключения выбранных строк и столбцов
+        temp_matrix[min_row_index, :] = np.inf
+        temp_matrix[:, min_col_index] = np.inf
+
+    return assignments_row, assignments_col
 
 
 class Ui(QtWidgets.QWidget):
