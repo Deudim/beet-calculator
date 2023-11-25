@@ -64,6 +64,9 @@ cost_matrix = cost_matrix * -1
 # print(total)
 
 
-print(f'munkres {utils.munkres(matrix)}')
-print(f'hungarian {utils.hungarian(matrix)}')
-print(f'greedy {utils.greedy(matrix)}')
+# print(f'munkres {utils.munkres(matrix)}')
+# print(f'hungarian {utils.hungarian(matrix)}')
+# print(f'greedy {utils.greedy(matrix)}')
+
+a = utils.greedy(matrix)
+print(a)

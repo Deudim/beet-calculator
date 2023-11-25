@@ -28,7 +28,10 @@ def hungarian(matrix, target='min'):
     row_ind, col_ind = linear_sum_assignment(
         matrix)  # Венгерский метод (https://docs.scipy.org/doc/scipy-1.1.0/reference/generated/scipy.optimize.linear_sum_assignment.html)
     res = matrix[row_ind, col_ind].sum()
-    return float(kf * res)
+    return {'result': float(kf * res),
+            'rows': row_ind.tolist(),
+            'cols': col_ind.tolist()
+            }
 
 
 #@calculate_time
@@ -40,10 +43,17 @@ def munkres(matrix, target='min'):
     m = Munkres()  # Метод Мака https://software.clapper.org/munkres/
     indexes = m.compute(matrix)
     res = 0
+    row_ind = []
+    col_ind = []
     for row, column in indexes:
         value = matrix[row][column]
         res += value
-    return float(kf * res)
+        row_ind.append(row)
+        col_ind.append(column)
+    return {'result': float(kf * res),
+            'rows': row_ind,
+            'cols': col_ind
+            }
 
 
 #@calculate_time
@@ -56,7 +66,10 @@ def greedy(matrix, target='min'):
     row_ind, col_ind = _greedy_assignment(
         matrix)
     res = matrix[row_ind, col_ind].sum()
-    return float(kf * res)
+    return {'result': float(kf * res),
+            'rows': row_ind,
+            'cols': col_ind
+            }
 
 
 def multiply_matrix_(matrix, a):
