@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>828</width>
+    <width>1200</width>
     <height>497</height>
    </rect>
   </property>
@@ -18,13 +18,13 @@
   </property>
   <property name="minimumSize">
    <size>
-    <width>828</width>
+    <width>1200</width>
     <height>497</height>
    </size>
   </property>
   <property name="maximumSize">
    <size>
-    <width>828</width>
+    <width>1200</width>
     <height>497</height>
    </size>
   </property>
@@ -68,7 +68,7 @@
     <rect>
      <x>10</x>
      <y>40</y>
-     <width>621</width>
+     <width>991</width>
      <height>351</height>
     </rect>
    </property>
@@ -77,7 +77,7 @@
      <rect>
       <x>0</x>
       <y>0</y>
-      <width>621</width>
+      <width>991</width>
       <height>351</height>
      </rect>
     </property>
@@ -91,8 +91,8 @@
   <widget class="QWidget" name="verticalLayoutWidget">
    <property name="geometry">
     <rect>
-     <x>660</x>
-     <y>160</y>
+     <x>1020</x>
+     <y>170</y>
      <width>160</width>
      <height>80</height>
     </rect>
@@ -120,8 +120,8 @@
   <widget class="QLabel" name="label_2">
    <property name="geometry">
     <rect>
-     <x>660</x>
-     <y>20</y>
+     <x>1020</x>
+     <y>30</y>
      <width>161</width>
      <height>21</height>
     </rect>
@@ -159,8 +159,8 @@
   <widget class="QWidget" name="verticalLayoutWidget_2">
    <property name="geometry">
     <rect>
-     <x>660</x>
-     <y>60</y>
+     <x>1020</x>
+     <y>70</y>
      <width>160</width>
      <height>91</height>
     </rect>
@@ -195,7 +195,7 @@
   <widget class="QPushButton" name="exit">
    <property name="geometry">
     <rect>
-     <x>700</x>
+     <x>1070</x>
      <y>460</y>
      <width>121</width>
      <height>31</height>
@@ -203,6 +203,19 @@
    </property>
    <property name="text">
     <string>Выход</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pb_gen">
+   <property name="geometry">
+    <rect>
+     <x>310</x>
+     <y>10</y>
+     <width>131</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Сгенерировать</string>
    </property>
   </widget>
  </widget>

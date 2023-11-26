@@ -153,6 +153,7 @@ def _matrix_assist(type, matrix, target):
     elif type == 2:
         return greedy(matrix, target)
 
+
 class Ui(QtWidgets.QWidget):
     def __init__(self):
         super(Ui, self).__init__()
@@ -160,6 +161,7 @@ class Ui(QtWidgets.QWidget):
         self.spinBox_matrics_count.valueChanged.connect(self.on_spinBox_matrics_count_changed)
         self.get_res.clicked.connect(self.on_get_res)
         self.exit.clicked.connect(self.on_exit)
+        self.pb_gen.clicked.connect(self.on_gen)
         self.gridLayout.setSpacing(0)
         for i in range(self.spinBox_matrics_count.value()):
             for j in range(self.spinBox_matrics_count.value()):
@@ -170,6 +172,16 @@ class Ui(QtWidgets.QWidget):
 
     def on_exit(self):
         self.close()
+
+    def on_gen(self):
+        self.spinBox_matrics_count.setValue(20)
+        ret = create_matrix_z()
+        print(ret[0][0])
+        for i in range(self.spinBox_matrics_count.value()):
+            for j in range(self.spinBox_matrics_count.value()):
+                self.gridLayout.itemAtPosition(i, j).widget().setStyleSheet("background-color: none")
+                self.gridLayout.itemAtPosition(i, j).widget().setText(str(float('{:.3f}'.format(ret[i][j]))))
+
 
     def on_spinBox_matrics_count_changed(self):
         matrics_count = self.spinBox_matrics_count.value()
