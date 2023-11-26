@@ -1,4 +1,3 @@
-import utils
 from PyQt5 import QtWidgets
 from utils import Ui
 import sys

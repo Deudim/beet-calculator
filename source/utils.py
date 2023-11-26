@@ -106,6 +106,45 @@ def _greedy_assignment(matrix):
     return assignments_row, assignments_col
 
 
+def create_matrix_z():
+    """
+    Формируем матрицу сахаростисти с учетом колбасной формулы
+
+    :return list[20][20]
+    """
+    a = np.arange(15, 21, 0.3)  # Вектор изначальной сахаростисти свеклы
+    K = np.arange(5, 7.5, 0.13)  # Вектор неораники K
+    Na = np.arange(0.3, 0.9, 0.031)  # Вектор неораники Na
+    N = np.arange(1.5, 3, 0.076)  # Вектор неораники N
+    np.random.shuffle(K)
+    np.random.shuffle(Na)
+    np.random.shuffle(N)
+
+    B = 0.12 * (K + Na) + 0.24 * N + 0.48  # Формируем вектор неорганики по колбасной формуле
+
+    b_matrix = []                             # Матрица коофициентов дегродации
+    for i in range(20):                       #
+        cache = np.arange(0.05, 1, 0.05)
+        np.random.shuffle(cache)
+        b_matrix.append(cache)
+
+    b_matrix = np.array(b_matrix)
+
+    np.random.shuffle(a)
+
+    Z = np.zeros((20, 20))
+
+    for i in range(20):               # Формируем матрицу Z, z_i_j = a_i*b_i_j - B_i  (b_i_j = (i = 1..20 ))
+        Z[i][0] = a[i] - B[i]
+        product = a[i]
+        for j in range(1, 20):
+            product *= b_matrix[i][j - 1]
+            product -= B[i]
+            Z[i][j] = product
+
+    return Z.tolist()
+
+
 def _matrix_assist(type, matrix, target):
     if type == 0:
         return hungarian(matrix, target)
@@ -185,5 +224,3 @@ class Ui(QtWidgets.QWidget):
         self.l_res.setText(out_text + str(text_res))
         for i in range(matrics_count):
             self.gridLayout.itemAtPosition(rows[i], cols[i]).widget().setStyleSheet("background-color: green")
-
-
