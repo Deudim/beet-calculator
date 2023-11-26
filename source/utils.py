@@ -184,6 +184,6 @@ class Ui(QtWidgets.QWidget):
         text_res = result['result']
         self.l_res.setText(out_text + str(text_res))
         for i in range(matrics_count):
-            self.gridLayout.itemAtPosition(cols[i], rows[i]).widget().setStyleSheet("background-color: green")
+            self.gridLayout.itemAtPosition(rows[i], cols[i]).widget().setStyleSheet("background-color: green")
 
 

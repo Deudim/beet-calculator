@@ -55,7 +55,7 @@ cost_matrix = np.array([
     [5, 8, 1, 8],
     [7, 6, 9, 4.]
 ])
-cost_matrix = cost_matrix * -1
+#cost_matrix = cost_matrix * -1
 # assignments = assign_jobs(matrix)
 # print("Назначения работников на работы:", assignments)
 # total = 0
@@ -65,8 +65,10 @@ cost_matrix = cost_matrix * -1
 
 
 # print(f'munkres {utils.munkres(matrix)}')
-# print(f'hungarian {utils.hungarian(matrix)}')
+# print(f'hungarian {utils.hungarian(matrix)}8')
 # print(f'greedy {utils.greedy(matrix)}')
 
 a = utils.greedy(matrix)
+b = utils.hungarian(matrix)
 print(a)
+print(b)
