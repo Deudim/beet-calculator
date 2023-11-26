@@ -5,7 +5,7 @@ from munkres import Munkres
 import time
 from PyQt5 import QtWidgets, QtCore, uic
 from PyQt5.QtWidgets import QApplication, QLineEdit, QVBoxLayout, QPushButton
-
+from PyQt5.QtCore import Qt
 
 def calculate_time(func):
     def wrapper(*args, **kwargs):
@@ -78,7 +78,6 @@ def multiply_matrix_(matrix, a):
             matrix[i][j] *= a
     return matrix
 
-
 def _greedy_assignment(matrix):
     """
     жадная
@@ -107,19 +106,31 @@ def _greedy_assignment(matrix):
     return assignments_row, assignments_col
 
 
+def _matrix_assist(type, matrix, target):
+    if type == 0:
+        return hungarian(matrix, target)
+    elif type == 1:
+        return munkres(matrix, target)
+    elif type == 2:
+        return greedy(matrix, target)
+
 class Ui(QtWidgets.QWidget):
     def __init__(self):
         super(Ui, self).__init__()
         uic.loadUi('../widget.ui', self)
         self.spinBox_matrics_count.valueChanged.connect(self.on_spinBox_matrics_count_changed)
         self.get_res.clicked.connect(self.on_get_res)
-        for i in range(2):
-            for j in range(2):
+        self.exit.clicked.connect(self.on_exit)
+        self.gridLayout.setSpacing(0)
+        for i in range(self.spinBox_matrics_count.value()):
+            for j in range(self.spinBox_matrics_count.value()):
                 test = QLineEdit(self)
                 test.insert("0")
-                self.gridLayout.addWidget(test, i, j)
+                self.gridLayout.addWidget(test, i, j, Qt.AlignHCenter)
             self.show()
 
+    def on_exit(self):
+        self.close()
 
     def on_spinBox_matrics_count_changed(self):
         matrics_count = self.spinBox_matrics_count.value()
@@ -132,7 +143,7 @@ class Ui(QtWidgets.QWidget):
             for j in range(matrics_count):
                 test = QLineEdit(self)
                 test.insert("0")
-                self.gridLayout.addWidget(test, i, j)
+                self.gridLayout.addWidget(test, i, j, Qt.AlignHCenter)
 
     def on_get_res(self):
         matrics_count = self.spinBox_matrics_count.value()
@@ -154,12 +165,25 @@ class Ui(QtWidgets.QWidget):
                         textnew = float(texstarr[0])
                     except:
                         textnew = 0.0
-
+                self.gridLayout.itemAtPosition(i, j).widget().setStyleSheet("background-color: none")
                 matrics[i][j] = textnew
-        #print(matrics)
-        out = ""
         get_out = "max"
+        out_text= "Максимум = "
         if self.rb_min.isChecked():
             get_out = "min"
-        self.l_res.setText(get_out + ": " + str(hungarian(matrics, get_out)))
+            out_text = "Минимум = "
+        type = 0
+        if self.rb_greedy.isChecked():
+            type = 2
+        elif self.rb_munkres.isChecked():
+            type = 1
+
+        result = _matrix_assist(type, matrics, get_out)
+        rows = result['rows']
+        cols = result['cols']
+        text_res = result['result']
+        self.l_res.setText(out_text + str(text_res))
+        for i in range(matrics_count):
+            self.gridLayout.itemAtPosition(cols[i], rows[i]).widget().setStyleSheet("background-color: green")
+
 
