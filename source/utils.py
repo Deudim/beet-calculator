@@ -176,7 +176,7 @@ class Ui(QtWidgets.QWidget):
     def on_gen(self):
         self.spinBox_matrics_count.setValue(20)
         ret = create_matrix_z()
-        print(ret[0][0])
+        #print(ret[0][0])
         for i in range(self.spinBox_matrics_count.value()):
             for j in range(self.spinBox_matrics_count.value()):
                 self.gridLayout.itemAtPosition(i, j).widget().setStyleSheet("background-color: none")
