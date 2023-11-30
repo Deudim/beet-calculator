@@ -46,6 +46,7 @@ def make_report():
     if not os.path.exists('out'):
         os.mkdir('out')
 
+
     plt.savefig('out/my_plot.png')
     df.to_csv('out/report.csv', index=False)
 
