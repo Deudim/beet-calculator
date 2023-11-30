@@ -13,21 +13,47 @@ def _matrix_assist(type, matrix, target):
         return greedy(matrix, target)
 
 
+class SecondWindow(QtWidgets.QWidget):
+    def __init__(self, parent=None):
+        # Передаём ссылку на родительский элемент и чтобы виджет
+        # отображался как самостоятельное окно указываем тип окна
+        super().__init__(parent, QtCore.Qt.Window)
+        self.setWindowTitle("Отчёт")
+        self.setGeometry(0,0,640,480)
+
+
 class Ui(QtWidgets.QWidget):
     def __init__(self):
         super(Ui, self).__init__()
         uic.loadUi('../widget.ui', self)
+        self.secondWin = None
         self.spinBox_matrics_count.valueChanged.connect(self.on_spinBox_matrics_count_changed)
         self.get_res.clicked.connect(self.on_get_res)
         self.exit.clicked.connect(self.on_exit)
         self.pb_gen.clicked.connect(self.on_gen)
         self.gridLayout.setSpacing(0)
-        for i in range(self.spinBox_matrics_count.value()):
-            for j in range(self.spinBox_matrics_count.value()):
+        self.get_otch.clicked.connect(self.on_otch)
+
+        ret = create_matrix_z()
+        for i in range(self.spinBox_matrics_count.value()+1):
+            for j in range(self.spinBox_matrics_count.value()+1):
                 test = QLineEdit(self)
-                test.insert("0")
+                test.setReadOnly(True)
+                if i == 0 and j != 0:
+                    test.insert("day " + str(j))
+                elif j == 0 and i != 0:
+                    test.insert("p " + str(i))
+                elif i == 0 and j == 0:
+                    test.insert("p\d")
+                else:
+                    test.setReadOnly(False)
+                    test.insert(str(float('{:.3f}'.format(ret[i-1][j-1]))))
                 self.gridLayout.addWidget(test, i, j, Qt.AlignHCenter)
             self.show()
+
+    def on_otch(self):
+        self.secondWin = SecondWindow()
+        self.secondWin.show()
 
     def on_exit(self):
         self.close()
@@ -38,8 +64,8 @@ class Ui(QtWidgets.QWidget):
         #print(ret[0][0])
         for i in range(self.spinBox_matrics_count.value()):
             for j in range(self.spinBox_matrics_count.value()):
-                self.gridLayout.itemAtPosition(i, j).widget().setStyleSheet("background-color: none")
-                self.gridLayout.itemAtPosition(i, j).widget().setText(str(float('{:.3f}'.format(ret[i][j]))))
+                self.gridLayout.itemAtPosition(i+1, j+1).widget().setStyleSheet("background-color: none")
+                self.gridLayout.itemAtPosition(i+1, j+1).widget().setText(str(float('{:.3f}'.format(ret[i][j]))))
 
 
     def on_spinBox_matrics_count_changed(self):
@@ -49,10 +75,19 @@ class Ui(QtWidgets.QWidget):
             self.gridLayout.removeWidget(widgetToRemove)
             widgetToRemove.setParent(None)
 
-        for i in range(matrics_count):
-            for j in range(matrics_count):
+        for i in range(self.spinBox_matrics_count.value()+1):
+            for j in range(self.spinBox_matrics_count.value()+1):
                 test = QLineEdit(self)
-                test.insert("0")
+                test.setReadOnly(True)
+                if i == 0 and j != 0:
+                    test.insert("day " + str(j))
+                elif j == 0 and i != 0:
+                    test.insert("p " + str(i))
+                elif i == 0 and j == 0:
+                    test.insert("p\d")
+                else:
+                    test.setReadOnly(False)
+                    test.insert("0")
                 self.gridLayout.addWidget(test, i, j, Qt.AlignHCenter)
 
     def on_get_res(self):
@@ -62,7 +97,7 @@ class Ui(QtWidgets.QWidget):
             matrics.append([])
             for j in range(matrics_count):
                 matrics[i].append([])
-                text = self.gridLayout.itemAtPosition(i, j).widget().text()
+                text = self.gridLayout.itemAtPosition(i+1, j+1).widget().text()
                 texstarr = text.split("/")
                 textnew = 0.0
                 if len(texstarr) == 2:
@@ -75,7 +110,7 @@ class Ui(QtWidgets.QWidget):
                         textnew = float(texstarr[0])
                     except:
                         textnew = 0.0
-                self.gridLayout.itemAtPosition(i, j).widget().setStyleSheet("background-color: none")
+                self.gridLayout.itemAtPosition(i+1, j+1).widget().setStyleSheet("background-color: none")
                 matrics[i][j] = textnew
         get_out = "max"
         out_text= "Максимум = "
@@ -92,6 +127,12 @@ class Ui(QtWidgets.QWidget):
         rows = result['rows']
         cols = result['cols']
         text_res = result['result']
-        self.l_res.setText(out_text + str(text_res))
+        ##for i in range(matrics_count):
+
+        self.l_res.setText(out_text + str(text_res)) ## вывод текста
+        out = {result['cols']: result['rows']}
         for i in range(matrics_count):
-            self.gridLayout.itemAtPosition(rows[i], cols[i]).widget().setStyleSheet("background-color: green")
+            self.gridLayout.itemAtPosition(rows[i]+1, cols[i]+1).widget().setStyleSheet("background-color: green")
+            for j in range(matrics_count):
+                if j == rows[j] and i == cols[i]:
+                    print("День "+ str(i+1) + " - " + self.gridLayout.itemAtPosition(j+1, i+1).widget().text())
