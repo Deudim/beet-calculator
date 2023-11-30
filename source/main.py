@@ -1,5 +1,5 @@
 from PyQt5 import QtWidgets
-from utils import Ui
+from forui import Ui
 import sys
 
 
