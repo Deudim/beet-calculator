@@ -43,8 +43,10 @@ def make_report():
     plt.legend()
     #plt.show()
 
-    os.mkdir('out')
+    if not os.path.exists('out'):
+        os.mkdir('out')
+
     plt.savefig('out/my_plot.png')
     df.to_csv('out/report.csv', index=False)
 
-
+make_report()

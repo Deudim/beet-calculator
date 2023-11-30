@@ -1,5 +1,4 @@
 import numpy as np
-from matplotlib import pyplot as plt
 from scipy.optimize import linear_sum_assignment
 from munkres import Munkres
 import time
