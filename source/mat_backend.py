@@ -122,7 +122,7 @@ def create_matrix_z():
 
     b_matrix = []                             # Матрица коофициентов дегродации
     for i in range(20):                       #
-        cache = np.arange(0.05, 1, 0.05)
+        cache = np.arange(0.9, 0.99, 0.0048)
         np.random.shuffle(cache)
         b_matrix.append(cache)
 
@@ -133,11 +133,11 @@ def create_matrix_z():
     Z = np.zeros((20, 20))
 
     for i in range(20):               # Формируем матрицу Z, z_i_j = a_i*b_i_j - B_i  (b_i_j = (i = 1..19 ))
-        Z[i][0] = a[i] - B[i]        #a[i]- a[i] *  B[i]/100
+        Z[i][0] = a[i] - a[i] * B[i]/100        #a[i] умножить на влияние не органики(не органика считается процентом от сахаристости)
         product = a[i]
         for j in range(1, 20):
             product *= b_matrix[i][j - 1]
-            product -= B[i]
+            product = product - product * B[i]/100
             Z[i][j] = product
 
     return Z.tolist()
