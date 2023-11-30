@@ -1,57 +1,50 @@
+from mat_backend import hungarian, munkres, greedy, create_matrix_z
 import numpy as np
-import utils
+from matplotlib import pyplot as plt
+import pandas as pd
+import os
 
 
+def make_report():
+    df = pd.DataFrame(columns=['Венгерский', 'Жадный', 'Разница', 'итерация'])
+    future_mean_hung = [[] for j in range(20)]
+    future_mean_greed = [[] for i in range(20)]
 
+    for step in range(50):
+        z = create_matrix_z()
+        hung = hungarian(z, 'max')
+        res_hung_on_i = 0
+        greed = greedy(z, 'max')
+        res_greed_on_i = 0
 
-# a = np.arange(15, 21, 0.3)
-# #b = np.arange(0.05, 1, 0.05)
-# K = np.arange(5, 7.5, 0.13)
-# Na = np.arange(0.3, 0.9, 0.031)
-# N = np.arange(1.5, 3, 0.076)
-# np.random.shuffle(K)
-# np.random.shuffle(Na)
-# np.random.shuffle(N)
-#
-# B = 0.12 * (K + Na) + 0.24 * N + 0.48
-#
-# print(B)
-#
-# b_matrix = []
-# for i in range(20):
-#     cache = np.arange(0.05, 1, 0.05)
-#     np.random.shuffle(cache)
-#     b_matrix.append(cache)
-#
-# b_matrix = np.array(b_matrix)
-#
-# np.random.shuffle(a)
-#
-# Z = np.zeros((20, 20))
-#
-# for i in range(20):
-#     Z[i][0] = a[i] - B[i]
-#     product = a[i]
-#     for j in range(1, 20):
-#         product *= b_matrix[i][j - 1]
-#         product -= B[i]
-#         Z[i][j] = product
-#
-# print(Z)
-# z_list = Z.tolist()
+        for i in range(len(hung['rows'])):
+            res_hung_on_i += z[hung['rows'][i]][hung['cols'][i]]/100
+            future_mean_hung[i].append(res_hung_on_i)
 
-s_opt = []
-s_greedy = []
-for i in range(10000):
-    z_m = utils.create_matrix_z()
-    s_opt.append(utils.hungarian(z_m, 'max')['result'])
-    s_greedy.append(utils.greedy(z_m, 'max')['result'])
+            res_greed_on_i += z[greed['rows'][i]][greed['cols'][i]]/100
+            future_mean_greed[i].append(res_greed_on_i)
 
-opt = np.array(s_opt)
-opt = opt.mean()
-greedy = np.array(s_greedy)
-greedy = greedy.mean()
+            difference = abs(res_hung_on_i - res_greed_on_i)
+            df.loc[len(df)] = [res_hung_on_i, res_greed_on_i, difference, step]
 
-print(f'greedy error is {abs(opt - greedy)}')
+    hung_mean_numpy = np.zeros(20)
+    greed_mean_numpy = np.zeros(20)
+
+    for i in range(20):
+        hung_mean_numpy[i] = np.mean(future_mean_hung[i])
+        greed_mean_numpy[i] = np.mean(future_mean_greed[i])
+
+    days = np.arange(1, 21, 1)
+
+    plt.plot(days, hung_mean_numpy, label='Венгерсикй')
+    plt.plot(days, greed_mean_numpy, label='Жадный')
+    plt.xlabel('Дни')
+    plt.ylabel('Кг сахара')
+    plt.legend()
+    #plt.show()
+
+    os.mkdir('out')
+    plt.savefig('out/my_plot.png')
+    df.to_csv('out/report.csv', index=False)
 
 
