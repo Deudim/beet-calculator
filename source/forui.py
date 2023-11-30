@@ -124,15 +124,22 @@ class Ui(QtWidgets.QWidget):
             type = 1
 
         result = _matrix_assist(type, matrics, get_out)
+        # for i, j in zip(result['rows'], result['cols']):  #test
+        #     print(i, j)
         rows = result['rows']
         cols = result['cols']
         text_res = result['result']
         ##for i in range(matrics_count):
-
+        print(rows[0])
         self.l_res.setText(out_text + str(text_res)) ## вывод текста
-        out = {result['cols']: result['rows']}
+        out = {col: row for col, row in zip(cols, rows)}
+        summa = 0
         for i in range(matrics_count):
             self.gridLayout.itemAtPosition(rows[i]+1, cols[i]+1).widget().setStyleSheet("background-color: green")
-            for j in range(matrics_count):
-                if j == rows[j] and i == cols[i]:
-                    print("День "+ str(i+1) + " - " + self.gridLayout.itemAtPosition(j+1, i+1).widget().text())
+            #for j in range(matrics_count):
+                # if j == rows[j] and i == cols[i]:
+                #     print("День "+ str(i+1) + " - " + self.gridLayout.itemAtPosition(j+1, i+1).widget().text())
+            this_day = self.gridLayout.itemAtPosition(out[i]+1, i+1).widget().text()
+            summa += float(this_day)/100
+            #print("День " + str(i+1) + " - " + this_day)
+            print(f"За {i+1} день добыли {float(this_day)/100}кг, кг сахара в общем - {summa}")  #1партия - 1 кг сахара
