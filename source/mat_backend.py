@@ -140,3 +140,15 @@ def create_matrix_z():
             Z[i][j] = product
 
     return Z.tolist()
+
+
+def string_to_number(string):
+    # Split the string by '/'
+    numbers = string.split('/')
+    if string.find('/') == -1:
+        return float(string)
+
+    # Convert strings to floating-point numbers and perform division
+    result = float(numbers[0]) / float(numbers[1])
+
+    return result
