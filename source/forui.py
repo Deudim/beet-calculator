@@ -1,7 +1,7 @@
 from PyQt5 import QtWidgets, QtCore, uic, QtGui
 from PyQt5.QtWidgets import QApplication, QLineEdit, QVBoxLayout, QPushButton
 from PyQt5.QtCore import Qt
-from mat_backend import hungarian, munkres, greedy, create_matrix_z
+from mat_backend import hungarian, munkres, greedy, create_matrix_z, string_to_number
 from report import make_report
 import os
 
@@ -21,16 +21,16 @@ class SecondWindow(QtWidgets.QWidget):
         super().__init__(parent, QtCore.Qt.Window)
         uic.loadUi('uis/otchet.ui', self)
         self.setWindowTitle("Отчёт")
-        self.pix.setPixmap(QtGui.QPixmap("out/my_plot.png"))
+        self.pix.setPixmap(QtGui.QPixmap("out\\my_plot.png"))
         self.exit.clicked.connect(self.on_exit)
         self.open_csv.clicked.connect(self.on_csv)
         self.open_folder.clicked.connect(self.on_folder)
 
 
     def on_folder(self):
-        os.startfile('out/')
+        os.startfile("out\\")
     def on_csv(self):
-        os.startfile('out/report.csv')
+        os.startfile("out\\report.csv")
 
     def on_exit(self):
         self.close()
@@ -39,7 +39,7 @@ class Ui(QtWidgets.QWidget):
     def __init__(self):
         super(Ui, self).__init__()
         uic.loadUi('uis/widget.ui', self)
-        self.secondWin = SecondWindow()
+        self.secondWin = None
         self.spinBox_matrics_count.valueChanged.connect(self.on_spinBox_matrics_count_changed)
         self.get_res.clicked.connect(self.on_get_res)
         self.exit.clicked.connect(self.on_exit)
@@ -77,8 +77,10 @@ class Ui(QtWidgets.QWidget):
                 event.accept()
 
     def on_otch(self):
-        make_report()
-        self.secondWin.show()
+        self.secondWin = None
+        if make_report():
+            self.secondWin = SecondWindow()
+            self.secondWin.show()
 
     def on_exit(self):
         self.close()
@@ -167,13 +169,13 @@ class Ui(QtWidgets.QWidget):
                 # if j == rows[j] and i == cols[i]:
                 #     print("День "+ str(i+1) + " - " + self.gridLayout.itemAtPosition(j+1, i+1).widget().text())
             this_day = self.gridLayout.itemAtPosition(out[i]+1, i+1).widget().text()
-            summa += float(this_day)/100
+            summa += float(string_to_number(this_day))/100
             #print("День " + str(i+1) + " - " + this_day)
             #print(f"За {i+1} день добыли {float(this_day)/100}кг, кг сахара в общем - {summa}")  #1партия - 1 кг сахара
             #out_text += "За " + str(i+1) + " день добыли "
             #out_text += str(float('{:.3f}'.format(float(this_day)/100))) + "кг, кг сахара в общем - " + str(float('{:.3f}'.format(summa)))
             #item = QtGui.QStandardItemModel(f"За {i+1} день добыли {float(this_day)/100}кг, кг сахара в общем - {summa}")
-            string_list.append(f"За {i+1} день добыли { float('{:.3f}'.format(float(this_day)/100)) }кг, кг сахара в общем - {float('{:.3f}'.format(float(summa)))}")
+            string_list.append(f"За {i+1} день добыли { float('{:.3f}'.format(float(string_to_number(this_day))/100)) }кг, сахара в общем - {float('{:.3f}'.format(float(summa)))}кг")
 
         model_1 = QtCore.QStringListModel(self)
         model_1.setStringList(string_list)
