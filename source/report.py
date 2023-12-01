@@ -6,7 +6,7 @@ import os
 
 
 def make_report():
-    df = pd.DataFrame(columns=['Венгерский', 'Жадный', 'Разница', 'итерация'])
+    df = pd.DataFrame(columns=['hungarian', 'greedy', 'difference', 'iteration'])
     future_mean_hung = [[] for j in range(20)]
     future_mean_greed = [[] for i in range(20)]
 
@@ -34,6 +34,12 @@ def make_report():
         hung_mean_numpy[i] = np.mean(future_mean_hung[i])
         greed_mean_numpy[i] = np.mean(future_mean_greed[i])
 
+    plot_report(hung_mean_numpy, greed_mean_numpy)
+    df.to_csv("out\\report.csv", index=False)
+    return True
+
+
+def plot_report(hung_mean_numpy, greed_mean_numpy):
     days = np.arange(1, 21, 1)
 
     plt.plot(days, hung_mean_numpy, label='Венгерсикй')
@@ -46,8 +52,5 @@ def make_report():
     if not os.path.exists('out'):
         os.mkdir('out')
 
-
-
-    plt.savefig('out/my_plot.png')
-    df.to_csv('out/report.csv', index=False)
-
+    plt.savefig("out\\my_plot.png")
+    plt.clf()
