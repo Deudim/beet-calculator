@@ -3,7 +3,7 @@ from scipy.optimize import linear_sum_assignment
 from munkres import Munkres
 import time
 
-
+# Декоратор для измерения времени выполнения функций
 def calculate_time(func):
     def wrapper(*args, **kwargs):
         start_time = time.perf_counter()
@@ -15,6 +15,7 @@ def calculate_time(func):
     return wrapper
 
 
+# Функция выполнения Венгерского алгоритма
 #@calculate_time
 def hungarian(matrix, target='min'):
     matrix = np.array(matrix)
@@ -30,7 +31,7 @@ def hungarian(matrix, target='min'):
             'cols': col_ind.tolist()
             }
 
-
+# Функция выполнения алгоритма Мака
 #@calculate_time
 def munkres(matrix, target='min'):
     kf = 1
@@ -53,6 +54,7 @@ def munkres(matrix, target='min'):
             }
 
 
+# Функция выполнения жадного алгоритма
 #@calculate_time
 def greedy(matrix, target='min'):
     matrix = np.array(matrix)
@@ -68,13 +70,15 @@ def greedy(matrix, target='min'):
             'cols': col_ind
             }
 
-
+# Умножение матрицы на число
 def multiply_matrix_(matrix, a):
     for i in range(len(matrix)):
         for j in range(len(matrix[i])):
             matrix[i][j] *= a
     return matrix
 
+
+# Жадный алгоритм для задачи о назначениях
 def _greedy_assignment(matrix):
     """
     жадная
@@ -103,9 +107,10 @@ def _greedy_assignment(matrix):
     return assignments_row, assignments_col
 
 
+# Создание матрицы Z с использованием Браунгшвейской формулы
 def create_matrix_z():
     """
-    Формируем матрицу сахаростисти с учетом колбасной формулы
+    Формируем матрицу сахаростисти с учетом Браунгшвейской формулы
 
     :return list[20][20]
     """
@@ -117,7 +122,7 @@ def create_matrix_z():
     np.random.shuffle(Na)
     np.random.shuffle(N)
 
-    B = 0.12 * (K + Na) + 0.24 * N + 0.48  # Формируем вектор неорганики по колбасной формуле
+    B = 0.12 * (K + Na) + 0.24 * N + 0.48  # Формируем вектор неорганики по Браунгшвейской формуле
 
     b_matrix = []                             # Матрица коофициентов дегродации
     for i in range(20):                       #
@@ -131,7 +136,7 @@ def create_matrix_z():
 
     Z = np.zeros((20, 20))
 
-    for i in range(20):               # Формируем матрицу Z, z_i_j = a_i*b_i_j - B_i  (b_i_j = (i = 1..19 ))
+    for i in range(20):               # Формируем матрицу Z, z_i_j = a_i*b_i_j - B_i  (b_i_j = (i = 1..19 )) (B_i = a[i] * B[i]/100 (вычитаем влияние не ораники как процентB[i] от сахористости))
         Z[i][0] = a[i] - a[i] * B[i]/100        #a[i] умножить на влияние не органики(не органика считается процентом от сахаристости)
         product = a[i]
         for j in range(1, 20):
@@ -142,6 +147,7 @@ def create_matrix_z():
     return Z.tolist()
 
 
+# Преобразование строки в число
 def string_to_number(string):
     # Split the string by '/'
     numbers = string.split('/')
