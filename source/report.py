@@ -45,7 +45,7 @@ def make_report():
         greed_mean_numpy[i] = np.mean(future_mean_greed[i])
 
     plot_report(hung_mean_numpy, greed_mean_numpy)
-    df.to_csv("out\\report.csv", index=False)
+    df.to_csv("out\\report.csv", index=False, sep=';')
     return True
 
 
